@@ -44,6 +44,7 @@ bool check(const char* word)
     {
         if (isalpha(word[i]))
         {
+            
             transfer[i] = word[i];
             transfer[i] = tolower(transfer[i]);
             k = transfer[i] - 'a';
@@ -93,7 +94,7 @@ bool load(const char* dictionary)
             fclose(dic);
             return false;
         }
-    node* cursor = root;
+
     int letter = 0;
     int index = 0;
     char current_word[LENGTH+1];
@@ -103,38 +104,48 @@ bool load(const char* dictionary)
     {
         if (chr == '\n')
         {
+            // Reset node
+            current_word[index] = chr;
+            node* cursor = root;
+            
             for (int i = 0; i < index; i++)
             {
                 // allow only alphabetical characters
-                if (current_word[i] == '\0')
-                    {
-                         // Close a word
-                         cursor->is_word = true;
-                    }
-                
                 if (isalpha(current_word[i]))
                 {
                     current_word[i] = tolower(current_word[i]); 
                     letter = current_word[i] - 'a';
+                    
+                    // setting the dicationary if NULL    
+                    if (cursor->children[letter] == NULL)
+                    {
+                        cursor->children[letter] = malloc(sizeof(node));
+                    }
+                    // point to next pointer
+                    cursor = cursor->children[letter];
                 }
                 else if (current_word[i] == '\'')
                 {
                     letter = 26; 
-                }
-
-                // setting the dicationary if NULL    
-                if (cursor->children[letter] == NULL)
+                    
+                    // setting the dicationary if NULL    
+                    if (cursor->children[letter] == NULL)
                     {
                         cursor->children[letter] = malloc(sizeof(node));
+                     }
+                     // point to next pointer 
+                     cursor = cursor->children[letter];
+                }
+                else if (current_word[i] == '\n')
+                    {
+                         // Close a word
+                         cursor->is_word = true;
                     }
-                // point to next pointer
-                else 
-                    cursor = cursor->children[letter];
+
             }
             
             // reset
             index = 0;
-            
         }
         else
         {
