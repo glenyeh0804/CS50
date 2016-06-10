@@ -108,7 +108,7 @@ bool load(const char* dictionary)
             current_word[index] = chr;
             node* cursor = root;
             
-            for (int i = 0; i < index; i++)
+            for (int i = 0; i < index + 1; i++)
             {
                 // allow only alphabetical characters
                 if (isalpha(current_word[i]))
