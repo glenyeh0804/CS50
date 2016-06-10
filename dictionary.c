@@ -28,6 +28,14 @@ node;
 // create the root of the tries
 node* root;
 
+// define the size calculator
+unsigned int sizec;
+
+// define the unload function
+bool freeMemory(node* node);
+
+
+
 /**
  * Returns true if word is in dictionary else false.
  */
@@ -140,6 +148,9 @@ bool load(const char* dictionary)
                     {
                          // Close a word
                          cursor->is_word = true;
+                         
+                         // count the word
+                         sizec++;
                     }
 
             }
@@ -164,8 +175,7 @@ bool load(const char* dictionary)
  */
 unsigned int size(void)
 {
-    // TODO
-    return 0;
+    return sizec;
 }
 
 /**
@@ -173,6 +183,29 @@ unsigned int size(void)
  */
 bool unload(void)
 {
-    // TODO
-    return false;
+    return freeMemory(root);
+}
+
+
+/**
+ * frees memory allocated to passed root node and all its child nodes
+ *
+ * @arg     node*    node    root node to search/free()
+ * @return  bool                    true when all nodes are free()'d
+ */
+bool freeMemory(node* node)
+{
+    for (int i = 0; i < 27; i++)
+    {
+        // recursively call freeMemory() for each malloc'd child
+        if (node->children[i] != NULL)
+        {
+            freeMemory(node->children[i]);
+        }
+    }
+    
+    // free the parent (this) node
+    free(node);
+
+    return true;
 }
